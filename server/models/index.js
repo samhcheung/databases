@@ -1,4 +1,4 @@
-var db = require('../db');
+var db = require('../db/index.js');
 
 module.exports = {
   messages: {
