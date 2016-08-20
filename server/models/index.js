@@ -2,11 +2,15 @@ var db = require('../db');
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
+    get: function (table, callback) {
+      db.queryGET('TAB_MESSAGES', function(err, result) {
+        callback(err, result);
+      });
+
+    }, // a function which produces all the messages
     post: function (table, message, callback) {
       // var post = ['hello', null, 'Sam', 'lobby'];
-      db.queryPOST('TAB_MESSAGES', message, function(err, result) {
-        if (err) { console.log('Query failed', err); return err; }
+      db.queryPOST('TAB_MESSAGES', message, function() {
         callback();
       });
     } // a function which can be used to insert a message into the database
@@ -16,9 +20,9 @@ module.exports = {
     // Ditto as above.
     get: function () {},
     post: function (table, username, callback) {
-      console.log('table', table, 'username', username);
-      db.queryPOST(table, [username], function(err, result) {
-        if (err) { console.log('Query failed', err); return err; }
+      username = (username ? username : 'unnamed');
+
+      db.queryPOST(table, [username], function() {
         callback();
       });
     }

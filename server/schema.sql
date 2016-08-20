@@ -37,6 +37,8 @@ CREATE TABLE `TAB_ROOMS` (
 ALTER TABLE `TAB_MESSAGES` ADD FOREIGN KEY (id_users) REFERENCES `TAB_USERS` (`id`);
 ALTER TABLE `TAB_MESSAGES` ADD FOREIGN KEY (id_rooms) REFERENCES `TAB_ROOMS` (`id`);
 
+INSERT INTO `TAB_ROOMS` (roomname) VALUES ('main');
+
 -- INSERT INTO TAB_USERS (username) VALUES ('Sam');
 -- INSERT INTO TAB_ROOMS (roomname) VALUES ('lobby');
 -- INSERT INTO TAB_MESSAGES (message, uid, id_users, id_rooms) VALUES ('hello', '1234', (SELECT id FROM TAB_USERS WHERE username = 'Sam'), (SELECT id FROM TAB_ROOMS WHERE roomname = 'lobby'));

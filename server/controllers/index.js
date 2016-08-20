@@ -2,7 +2,12 @@ var models = require('../models');
 
 module.exports = {
   messages: {
-    get: function (req, res) {}, // a function which handles a get request for all messages
+    get: function (req, res) {
+      models.messages.get('TAB_MESSAGES', function (err, result) {
+        console.log('TOP LEVEL', result);
+        res.end(JSON.stringify(result));
+      });
+    }, // a function which handles a get request for all messages
     post: function (req, res) {
       var roomname = req.body.roomname;
       models.users.post('TAB_ROOMS', roomname, function() {

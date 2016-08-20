@@ -37,22 +37,31 @@ exports.queryPOST = function(table, arr, callback) {
   if (table !== 'TAB_MESSAGES') {
     dbConnection.query('SELECT * FROM ' + table + ' WHERE ' + queryHash[table] + '=?', arr, function(err, result) {
 
-      if (err) { console.log('There was an error selecting'); closeDB(); callback(err); return; }
+      if (err) { console.log('There was an error selecting on POST'); closeDB(); callback(); return; }
 
       if (!result.length) {
         dbConnection.query('INSERT INTO ' + table + ' SET ' + queryHash[table] + '=?', arr, function(err) {
           if (err) { console.log('Error on insert'); closeDB(); return err; }
           closeDB();
-          callback();
+          callback(err);
         });
       } else {
         closeDB();
-        callback();
+        callback(err);
       }
     });
   } else {
     dbConnection.query('INSERT INTO TAB_MESSAGES (message, uid, id_users, id_rooms) VALUES (?, ?, (SELECT id FROM TAB_USERS WHERE username=?), (SELECT id FROM TAB_ROOMS WHERE roomname =?))', arr, callback);
   }
+};
+
+exports.queryGET = function (table, callback) {
+  openDB();
+  dbConnection.query('SELECT a.message, a.uid, a.createdAt,r.roomname FROM tab_messages a INNER JOIN tab_rooms r WHERE r.id = a.id_rooms;', function(err, result) {
+    if (err) { console.log('There was an error selecting on GET'); closeDB(); callback(err); return; }
+    closeDB();
+    callback(null, result);
+  });
 };
 
 // // Inserting username 'Sam'
