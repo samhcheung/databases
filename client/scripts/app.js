@@ -64,15 +64,14 @@ var app = {
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
         // Get the last message
-        // var mostRecentMessage = data.results[data.results.length - 1];
-        var mostRecentMessage = data.results[0];
+        var mostRecentMessage = data.results[data.results.length - 1];
+        // var mostRecentMessage = data.results[0];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
           app.populateRooms(data.results);
-
           // Update the UI with the fetched messages
           app.populateMessages(data.results, animate);
 
@@ -164,7 +163,7 @@ var app = {
       $message.text(data.message).appendTo($chat);
 
       // Add the message to the UI
-      app.$chats.append($chat);
+      app.$chats.prepend($chat);
     }
   },
 

@@ -18,13 +18,16 @@ module.exports = {
       });
     }, // a function which handles a get request for all messages
     post: function (req, res) {
+      console.log(req.body);
       var roomname = req.body.roomname;
       models.users.post('TAB_ROOMS', roomname, function() {
         var username = req.body.username;
-        var message = req.body.message;
-        var objectId = guid();
-        models.messages.post('TAB_MESSAGES', [message, objectId, username, roomname], function() {
-          res.end();
+        models.users.post('TAB_USERS', username, function () {
+          var message = req.body.message;
+          var objectId = guid();
+          models.messages.post('TAB_MESSAGES', [message, objectId, username, roomname], function() {
+            res.end();
+          });
         });
       });
     } // a function which handles posting a message to the database

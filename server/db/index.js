@@ -42,8 +42,8 @@ exports.queryPOST = function(table, arr, callback) {
       if (err) { console.log('There was an error selecting on POST'); closeDB(); callback(); return; }
 
       if (!result.length) {
-        dbConnection.query('INSERT INTO ' + table + ' SET ' + queryHash[table] + '=?', arr, function(err) {
-          if (err) { console.log('Error on insert'); closeDB(); return err; }
+        dbConnection.query('INSERT INTO ' + table + ' (' + queryHash[table] + ') VALUES (?)', arr, function(err) {
+          if (err) { console.log('Error on insert', err); closeDB(); return err; }
           closeDB();
           callback(err);
         });
@@ -59,7 +59,7 @@ exports.queryPOST = function(table, arr, callback) {
 
 exports.queryGET = function (table, callback) {
   openDB();
-  dbConnection.query('SELECT m.message, m.objectId, m.createdAt, r.roomname, u.username FROM tab_messages m INNER JOIN tab_rooms r, tab_users u WHERE r.id = m.id_rooms AND u.id = m.id_users', function(err, result) {
+  dbConnection.query('SELECT m.message, m.objectId, m.createdAt, r.roomname, u.username FROM tab_messages m INNER JOIN tab_rooms r, tab_users u WHERE r.id = m.id_rooms AND u.id = m.id_users ORDER BY m.id ASC', function(err, result) {
     if (err) { console.log('There was an error selecting on GET'); closeDB(); callback(err); return; }
     closeDB();
     callback(null, result);
