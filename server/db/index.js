@@ -18,10 +18,10 @@ var openDB = function() {
 };
 
 var closeDB = function(err) {
-  dbConnection.end(function(err) {
-    console.log('Connection closed');
-    // ensures graceful connection end;
-  });
+  // dbConnection.end(function(err) {
+  //   console.log('Connection closed');
+  //   // ensures graceful connection end;
+  // });
 };
 
 // var username = 'Sam';
@@ -37,8 +37,7 @@ exports.queryPOST = function(table, arr, callback) {
   if (table !== 'TAB_MESSAGES') {
     dbConnection.query('SELECT * FROM ' + table + ' WHERE ' + queryHash[table] + '=?', arr, function(err, result) {
 
-      if (err) { console.log('There was an error inserting username', err); callback(err); }
-      console.log('success search for ' + queryHash[table]);
+      if (err) { console.log('There was an error selecting'); closeDB(); callback(err); return; }
 
       if (!result.length) {
         dbConnection.query('INSERT INTO ' + table + ' SET ' + queryHash[table] + '=?', arr, function(err) {
@@ -46,9 +45,9 @@ exports.queryPOST = function(table, arr, callback) {
           closeDB();
           callback();
         });
-        console.log('finished inserting ' + queryHash[table]);
       } else {
         closeDB();
+        callback();
       }
     });
   } else {
