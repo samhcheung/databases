@@ -4,7 +4,6 @@ module.exports = {
   messages: {
     get: function (req, res) {
       models.messages.get('TAB_MESSAGES', function (err, result) {
-        console.log('TOP LEVEL', result);
         res.end(JSON.stringify(result));
       });
     }, // a function which handles a get request for all messages

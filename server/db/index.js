@@ -57,9 +57,10 @@ exports.queryPOST = function(table, arr, callback) {
 
 exports.queryGET = function (table, callback) {
   openDB();
-  dbConnection.query('SELECT a.message, a.uid, a.createdAt,r.roomname FROM tab_messages a INNER JOIN tab_rooms r WHERE r.id = a.id_rooms;', function(err, result) {
+  dbConnection.query('SELECT m.message, m.uid, m.createdAt, r.roomname, u.username FROM tab_messages m INNER JOIN tab_rooms r, tab_users u WHERE r.id = m.id_rooms AND u.id = m.id_users', function(err, result) {
     if (err) { console.log('There was an error selecting on GET'); closeDB(); callback(err); return; }
     closeDB();
+    console.log('BOTTOM LEVEL', result);
     callback(null, result);
   });
 };
