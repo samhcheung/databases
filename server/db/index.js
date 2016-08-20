@@ -10,6 +10,8 @@ var dbConnection = mysql.createConnection({
   database: 'chat'
 });
 
+
+
 var openDB = function() {
   dbConnection.connect(function (err) {
     if (err) { console.log('There was an error connecting to db'); return; }
@@ -51,16 +53,15 @@ exports.queryPOST = function(table, arr, callback) {
       }
     });
   } else {
-    dbConnection.query('INSERT INTO TAB_MESSAGES (message, uid, id_users, id_rooms) VALUES (?, ?, (SELECT id FROM TAB_USERS WHERE username=?), (SELECT id FROM TAB_ROOMS WHERE roomname =?))', arr, callback);
+    dbConnection.query('INSERT INTO TAB_MESSAGES (message, objectId, id_users, id_rooms) VALUES (?, ?, (SELECT id FROM TAB_USERS WHERE username=?), (SELECT id FROM TAB_ROOMS WHERE roomname =?))', arr, callback);
   }
 };
 
 exports.queryGET = function (table, callback) {
   openDB();
-  dbConnection.query('SELECT m.message, m.uid, m.createdAt, r.roomname, u.username FROM tab_messages m INNER JOIN tab_rooms r, tab_users u WHERE r.id = m.id_rooms AND u.id = m.id_users', function(err, result) {
+  dbConnection.query('SELECT m.message, m.objectId, m.createdAt, r.roomname, u.username FROM tab_messages m INNER JOIN tab_rooms r, tab_users u WHERE r.id = m.id_rooms AND u.id = m.id_users', function(err, result) {
     if (err) { console.log('There was an error selecting on GET'); closeDB(); callback(err); return; }
     closeDB();
-    console.log('BOTTOM LEVEL', result);
     callback(null, result);
   });
 };
