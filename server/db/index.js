@@ -24,7 +24,7 @@ var closeDB = function(err) {
   });
 };
 
-var username = 'Sam';
+// var username = 'Sam';
 
 var queryHash = {
   TAB_USERS: 'username',
@@ -32,7 +32,7 @@ var queryHash = {
   TAB_MESSAGES: 'message'
 };
 
-var queries = function(table, arr, callback) {
+exports.queryPOST = function(table, arr, callback) {
   openDB();
   if (table !== 'TAB_MESSAGES') {
     dbConnection.query('SELECT * FROM ' + table + ' WHERE ' + queryHash[table] + '=?', arr, function(err, result) {
@@ -41,8 +41,12 @@ var queries = function(table, arr, callback) {
       console.log('success search for ' + queryHash[table]);
 
       if (!result.length) {
-        dbConnection.query('INSERT INTO ' + table + ' SET ' + queryHash[table] + '=?', arr, callback);
-        console.log('finished inserting' + queryHash[table]);
+        dbConnection.query('INSERT INTO ' + table + ' SET ' + queryHash[table] + '=?', arr, function(err) {
+          if (err) { console.log('Error on insert'); closeDB(); return err; }
+          closeDB();
+          callback();
+        });
+        console.log('finished inserting ' + queryHash[table]);
       } else {
         closeDB();
       }
@@ -52,23 +56,23 @@ var queries = function(table, arr, callback) {
   }
 };
 
-// Inserting username 'Sam'
-queries('TAB_USERS', ['Sam'], function(err, result) {
-  if (err) { console.log('query failed', err); closeDB(); return err; }
-  console.log('users query worked!');
-});
-// Inserting room 'lobby'
-queries('TAB_ROOMS', ['lobby'], function(err, result) {
-  if (err) { console.log('query failed', err); closeDB(); return err; }
-  console.log('room query worked!');
-});
+// // Inserting username 'Sam'
+// queries('TAB_USERS', ['Sam'], function(err, result) {
+//   if (err) { console.log('query failed', err); closeDB(); return err; }
+//   console.log('users query worked!');
+// });
+// // Inserting room 'lobby'
+// queries('TAB_ROOMS', ['lobby'], function(err, result) {
+//   if (err) { console.log('query failed', err); closeDB(); return err; }
+//   console.log('room query worked!');
+// });
 
-var post = ['hello', null, 'Sam', 'lobby'];
+// var post = ['hello', null, 'Sam', 'lobby'];
 
-queries('TAB_MESSAGES', post, function(err, result) {
-  if (err) { console.log('query failed', err); closeDB(); return err; }
-  console.log('success posting message!');
-});
+// queries('TAB_MESSAGES', post, function(err, result) {
+//   if (err) { console.log('query failed', err); closeDB(); return err; }
+//   console.log('success posting message!');
+// });
 
 
 // INSERT INTO TAB_USERS (username) VALUES ('Sam');
